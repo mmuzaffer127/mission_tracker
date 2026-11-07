@@ -1,0 +1,29 @@
+{
+  "name": "mission-os",
+  "version": "1.0.0",
+  "description": "MISSION OS - Personal Growth, Mission Management & Achievement Tracking Operating System",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "install:all": "npm.cmd --prefix server install && npm.cmd --prefix client install",
+    "dev:server": "npm.cmd --prefix server run dev",
+    "dev:client": "npm.cmd --prefix client run dev",
+    "build:server": "npm.cmd --prefix server run build",
+    "build:client": "npm.cmd --prefix client run build",
+    "build": "npm.cmd --prefix server run build && npm.cmd --prefix client run build"
+  },
+  "keywords": [
+    "mission-os",
+    "productivity",
+    "personal-growth",
+    "habits",
+    "goals",
+    "achievements",
+    "ai"
+  ],
+  "author": "Mission OS Team",
+  "license": "MIT"
+}
