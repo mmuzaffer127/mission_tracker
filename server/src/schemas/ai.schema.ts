@@ -13,3 +13,4 @@ export const MissionBreakdownSchema = z.object({
 export const MonthlyReportAiSchema = z.object({
   yearMonth: z.string().regex(/^\d{4}-\d{2}$/, 'Must be YYYY-MM')
 });
+

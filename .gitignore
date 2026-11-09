@@ -11,10 +11,19 @@ out/
 
 # Environment Variables
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+*.env
+**/.env
+**/.env.*
+!**/.env.example
+
+# Build Outputs & Cache
+dist/
+**/dist/
+build/
+out/
+.next/
+*.tsbuildinfo
 
 # Logs
 npm-debug.log*
@@ -35,3 +44,4 @@ Thumbs.db
 
 # Supabase
 .supabase/
+

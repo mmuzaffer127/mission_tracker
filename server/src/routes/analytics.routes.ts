@@ -11,3 +11,4 @@ router.get('/life-balance-wheel', getLifeBalanceWheel);
 router.get('/heatmap', getHeatmap);
 
 export default router;
+

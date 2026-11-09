@@ -121,3 +121,4 @@ mission_tracker/
 - **Row Level Security**: Every table enforces multi-tenant row isolation via `auth.uid() = user_id`.
 - **Server-Side AI**: Zero client-side API keys. All Gemini prompts execute through backend services with strict validation.
 - **Defensive Timezones**: Streak calculations adapt to midnight roll-overs without mutating historic records.
+

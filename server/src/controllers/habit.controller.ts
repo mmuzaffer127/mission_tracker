@@ -37,3 +37,31 @@ export async function checkinHabit(req: AuthenticatedRequest, res: Response) {
     res.status(500).json({ success: false, error: error.message });
   }
 }
+
+export async function updateHabit(req: AuthenticatedRequest, res: Response) {
+  try {
+    const userId = req.userId!;
+    const habitId = req.params.id as string;
+    const updated = dbStore.updateHabit(userId, habitId, req.body);
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'Habit not found' });
+    }
+    res.json({ success: true, data: updated });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+}
+
+export async function deleteHabit(req: AuthenticatedRequest, res: Response) {
+  try {
+    const userId = req.userId!;
+    const habitId = req.params.id as string;
+    const deleted = dbStore.deleteHabit(userId, habitId);
+    if (!deleted) {
+      return res.status(404).json({ success: false, error: 'Habit not found' });
+    }
+    res.json({ success: true, message: 'Habit deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+}

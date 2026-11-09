@@ -58,21 +58,32 @@ export const FocusPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-black text-white tracking-tight flex items-center justify-center space-x-2">
-          <Timer className="w-8 h-8 text-brand-cyan" />
+        <h1
+          className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center justify-center space-x-2"
+          style={{ letterSpacing: '-0.06em' }}
+        >
+          <Timer className="w-8 h-8 text-white" />
           <span>Hyperfocus Command Center</span>
         </h1>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.60)' }}>
           Eliminate sensory distraction. Enter high-leverage flow states.
         </p>
       </div>
 
       {/* Mode Selector */}
-      <div className="flex items-center justify-center p-1.5 rounded-2xl bg-surface-100 border border-surface-border max-w-md mx-auto">
+      <div
+        className="flex items-center justify-center p-1.5 rounded-2xl max-w-md mx-auto"
+        style={{
+          background: 'rgba(255,255,255,0.08)',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+        }}
+      >
         <button
           onClick={() => switchMode('pomodoro')}
           className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
-            mode === 'pomodoro' ? 'bg-brand-blue text-white shadow-glow' : 'text-gray-400 hover:text-white'
+            mode === 'pomodoro'
+              ? 'bg-white text-[#1129e2] shadow-sm'
+              : 'text-white/60 hover:text-white'
           }`}
         >
           Pomodoro (25m)
@@ -80,7 +91,9 @@ export const FocusPage: React.FC = () => {
         <button
           onClick={() => switchMode('deep_work')}
           className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
-            mode === 'deep_work' ? 'bg-brand-cyan text-black font-bold shadow-glow' : 'text-gray-400 hover:text-white'
+            mode === 'deep_work'
+              ? 'bg-white text-[#1129e2] shadow-sm'
+              : 'text-white/60 hover:text-white'
           }`}
         >
           Deep Work (50m)
@@ -88,7 +101,9 @@ export const FocusPage: React.FC = () => {
         <button
           onClick={() => switchMode('short_break')}
           className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
-            mode === 'short_break' ? 'bg-brand-emerald text-black font-bold shadow-glow' : 'text-gray-400 hover:text-white'
+            mode === 'short_break'
+              ? 'bg-white text-[#1129e2] shadow-sm'
+              : 'text-white/60 hover:text-white'
           }`}
         >
           Short Rest (5m)
@@ -96,22 +111,34 @@ export const FocusPage: React.FC = () => {
       </div>
 
       {/* Futuristic Circular / Display Timer */}
-      <div className="glass-panel rounded-3xl p-12 border border-surface-border flex flex-col items-center justify-center space-y-8 shadow-card relative overflow-hidden">
+      <div
+        className="rounded-3xl p-12 flex flex-col items-center justify-center space-y-8 relative overflow-hidden"
+        style={{
+          background: 'rgba(255,255,255,0.08)',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18), 0 24px 64px rgba(0,0,0,0.25)'
+        }}
+      >
         {/* Ambient background glow when running */}
         {isRunning && (
-          <div className="absolute inset-0 bg-brand-cyan/5 animate-pulse pointer-events-none" />
+          <div
+            className="absolute inset-0 pointer-events-none animate-pulse"
+            style={{ background: 'rgba(255,255,255,0.05)' }}
+          />
         )}
 
         <div className="relative flex items-center justify-center">
-          <div className="text-7xl sm:text-8xl font-black text-white font-mono tracking-wider drop-shadow-md">
+          <div
+            className="text-7xl sm:text-8xl font-black text-white font-mono tracking-wider drop-shadow-md select-none"
+            style={{ letterSpacing: '0.04em' }}
+          >
             {timeFormatted}
           </div>
         </div>
 
         {/* Progress bar */}
-        <div className="w-full max-w-md bg-surface-50 h-2 rounded-full overflow-hidden">
+        <div className="w-full max-w-md progress-track h-2">
           <div
-            className="h-full bg-gradient-to-r from-brand-blue via-brand-cyan to-brand-emerald transition-all duration-300"
+            className="progress-fill h-full"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -120,7 +147,14 @@ export const FocusPage: React.FC = () => {
         <div className="flex items-center space-x-6">
           <button
             onClick={resetTimer}
-            className="p-3 rounded-2xl bg-surface-50 border border-surface-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors"
+            className="p-3 rounded-2xl transition-colors"
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              color: 'rgba(255,255,255,0.65)',
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+            }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#fff')}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.65)')}
             title="Reset Timer"
           >
             <RotateCcw className="w-5 h-5" />
@@ -128,10 +162,8 @@ export const FocusPage: React.FC = () => {
 
           <button
             onClick={toggleTimer}
-            className={`px-8 py-3.5 rounded-2xl font-bold text-sm tracking-wide shadow-glow transition-all active:scale-95 flex items-center space-x-2 ${
-              isRunning
-                ? 'bg-rose-500 text-white hover:bg-rose-600'
-                : 'bg-gradient-to-r from-brand-blue to-brand-cyan text-white hover:brightness-110'
+            className={`px-8 py-3.5 rounded-2xl font-bold text-sm tracking-wide transition-all active:scale-95 flex items-center space-x-2 ${
+              isRunning ? 'bg-white/20 text-white' : 'btn-primary'
             }`}
           >
             {isRunning ? (
@@ -141,7 +173,7 @@ export const FocusPage: React.FC = () => {
               </>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-white" />
+                <Play className="w-4 h-4 fill-current" />
                 <span>Initiate Focus</span>
               </>
             )}
@@ -149,14 +181,20 @@ export const FocusPage: React.FC = () => {
         </div>
 
         {/* Session Stats */}
-        <div className="flex items-center space-x-8 pt-6 border-t border-surface-border/60 text-xs text-gray-400">
+        <div
+          className="flex items-center space-x-8 pt-6 text-xs"
+          style={{
+            borderTop: '1px solid rgba(255,255,255,0.10)',
+            color: 'rgba(255,255,255,0.60)'
+          }}
+        >
           <div className="flex items-center space-x-2">
-            <Zap className="w-4 h-4 text-brand-amber" />
+            <Zap className="w-4 h-4 text-white" />
             <span>Today's Sessions: <strong className="text-white font-mono">{completedSessions} completed</strong></span>
           </div>
           <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-brand-cyan" />
-            <span>XP Rate: <strong className="text-brand-cyan font-mono">+25 XP / session</strong></span>
+            <Sparkles className="w-4 h-4 text-white" />
+            <span>XP Rate: <strong className="text-white font-mono">+25 XP / session</strong></span>
           </div>
         </div>
       </div>

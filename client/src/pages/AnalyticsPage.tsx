@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, PieChart, ShieldAlert } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
 import {
   Radar,
   RadarChart,
@@ -50,44 +50,67 @@ export const AnalyticsPage: React.FC = () => {
   ];
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500 animate-pulse">Calculating telemetry metrics...</div>;
+    return <div className="p-8 text-center text-white/50 animate-pulse">Calculating telemetry metrics...</div>;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
-          <BarChart3 className="w-6 h-6 text-brand-cyan" />
+        <h1
+          className="text-2xl sm:text-3xl font-black text-white flex items-center space-x-2"
+          style={{ letterSpacing: '-0.06em' }}
+        >
+          <BarChart3 className="w-6 h-6 text-white" />
           <span>Analytics & Life Balance Telemetry</span>
         </h1>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
           Multidimensional life optimization: holistic tracking across all 8 essential life quadrants.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Radar Chart: Life Balance Wheel */}
-        <div className="glass-panel rounded-2xl p-6 border border-surface-border flex flex-col items-center">
-          <div className="w-full flex items-center justify-between pb-3 border-b border-surface-border mb-4">
+        <div
+          className="rounded-2xl p-6 flex flex-col items-center"
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+          }}
+        >
+          <div
+            className="w-full flex items-center justify-between pb-3 mb-4"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}
+          >
             <div>
               <h3 className="text-sm font-bold text-white">8-Quadrant Life Balance Wheel</h3>
-              <p className="text-[11px] text-gray-400">Harmonized assessment across career, mind, and health</p>
+              <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                Harmonized assessment across career, mind, and health
+              </p>
             </div>
-            <span className="text-xs font-mono text-brand-cyan font-bold">Optimal Synergy</span>
+            <span
+              className="text-xs font-mono font-bold px-2 py-0.5 rounded-full"
+              style={{
+                background: 'rgba(255,255,255,0.12)',
+                color: '#ffffff',
+                boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.20)'
+              }}
+            >
+              Optimal Synergy
+            </span>
           </div>
 
           <div className="w-full h-80">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={wheelData}>
-                <PolarGrid stroke="#1f293d" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 10]} stroke="#334155" />
+                <PolarGrid stroke="rgba(255,255,255,0.15)" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.80)', fontSize: 11 }} />
+                <PolarRadiusAxis angle={30} domain={[0, 10]} stroke="rgba(255,255,255,0.25)" />
                 <Radar
                   name="Life Score"
                   dataKey="score"
-                  stroke="#3b82f6"
-                  fill="#3b82f6"
-                  fillOpacity={0.4}
+                  stroke="#ffffff"
+                  fill="#ffffff"
+                  fillOpacity={0.35}
                 />
               </RadarChart>
             </ResponsiveContainer>
@@ -95,26 +118,52 @@ export const AnalyticsPage: React.FC = () => {
         </div>
 
         {/* Bar Chart: Weekly Output & Deep Work */}
-        <div className="glass-panel rounded-2xl p-6 border border-surface-border flex flex-col">
-          <div className="w-full flex items-center justify-between pb-3 border-b border-surface-border mb-4">
+        <div
+          className="rounded-2xl p-6 flex flex-col"
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+          }}
+        >
+          <div
+            className="w-full flex items-center justify-between pb-3 mb-4"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}
+          >
             <div>
               <h3 className="text-sm font-bold text-white">Weekly Execution Velocity</h3>
-              <p className="text-[11px] text-gray-400">Completed missions vs. Deep Work hours logged</p>
+              <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                Completed missions vs. Deep Work hours logged
+              </p>
             </div>
-            <span className="text-xs font-mono text-emerald-400 font-bold">35.2 hrs logged</span>
+            <span
+              className="text-xs font-mono font-bold px-2 py-0.5 rounded-full"
+              style={{
+                background: 'rgba(255,255,255,0.12)',
+                color: '#ffffff',
+                boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.20)'
+              }}
+            >
+              35.2 hrs logged
+            </span>
           </div>
 
           <div className="w-full h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={productivityVelocity}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f293d" />
-                <XAxis dataKey="name" stroke="#64748b" fontSize={12} />
-                <YAxis stroke="#64748b" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.10)" />
+                <XAxis dataKey="name" stroke="rgba(255,255,255,0.60)" fontSize={12} />
+                <YAxis stroke="rgba(255,255,255,0.60)" fontSize={12} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', fontSize: '12px' }}
+                  contentStyle={{
+                    backgroundColor: 'rgba(17,41,226,0.95)',
+                    border: '1px solid rgba(255,255,255,0.25)',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    color: '#ffffff'
+                  }}
                 />
-                <Bar dataKey="missions" name="Missions Done" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="deepWorkHrs" name="Deep Work (Hrs)" fill="#10b981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="missions" name="Missions Done" fill="#ffffff" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="deepWorkHrs" name="Deep Work (Hrs)" fill="rgba(255,255,255,0.5)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

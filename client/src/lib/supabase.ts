@@ -10,5 +10,13 @@ export const isSupabaseConfigured =
   supabaseAnonKey !== 'placeholder-anon-key';
 
 export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: 'mission_os_auth'
+      }
+    })
   : null;
+

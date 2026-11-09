@@ -13,3 +13,4 @@ export function getGeminiAI(): GoogleGenAI | null {
   }
   return aiClient;
 }
+

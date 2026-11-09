@@ -79,3 +79,4 @@ export function calculateHabitStreak(
 
   return { currentStreak, longestStreak: Math.max(longestStreak, currentStreak) };
 }
+

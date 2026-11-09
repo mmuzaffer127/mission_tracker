@@ -210,7 +210,26 @@ class MemoryStore {
 
   // --- MISSIONS ---
   getMissions(userId: string) {
-    return this.missions.filter((m) => m.user_id === userId && !m.is_archived);
+    let userMissions = this.missions.filter((m) => m.user_id === userId && !m.is_archived);
+    if (userMissions.length === 0 && userId !== '00000000-0000-0000-0000-000000000001') {
+      // Seed default starter missions for this new user so dashboard isn't blank
+      INITIAL_MISSIONS.forEach((im, i) => {
+        const mid = `m-${Date.now()}-${i}`;
+        const newM: Mission = {
+          ...im,
+          id: mid,
+          user_id: userId,
+          subtasks: (im.subtasks || []).map((st, j) => ({
+            ...st,
+            id: `st-${Date.now()}-${i}-${j}`,
+            mission_id: mid
+          }))
+        };
+        this.missions.push(newM);
+      });
+      userMissions = this.missions.filter((m) => m.user_id === userId && !m.is_archived);
+    }
+    return userMissions;
   }
 
   getMissionById(userId: string, id: string) {
@@ -221,10 +240,10 @@ class MemoryStore {
     const rawSubtasks = payload.subtasks || [];
     const newMissionId = `m-${Date.now()}`;
     const newSubtasks: MissionSubtask[] = rawSubtasks.map((t, index) => ({
-      id: `st-${Date.now()}-${index}`,
+      id: typeof t === 'object' && t.id ? t.id : `st-${Date.now()}-${index}`,
       mission_id: newMissionId,
       title: typeof t === 'string' ? t : (t as any).title,
-      is_completed: false,
+      is_completed: typeof t === 'object' && Boolean(t.is_completed),
       order_index: index,
       created_at: new Date().toISOString()
     }));
@@ -252,14 +271,33 @@ class MemoryStore {
     return newMission;
   }
 
-  updateMission(userId: string, id: string, payload: Partial<Mission>) {
+  updateMission(userId: string, id: string, payload: Partial<Mission> & { subtasks?: (string | MissionSubtask)[] }) {
     const index = this.missions.findIndex((m) => m.id === id && m.user_id === userId);
     if (index === -1) return null;
 
     const mission = this.missions[index];
+
+    let updatedSubtasks = mission.subtasks;
+    if (payload.subtasks) {
+      updatedSubtasks = payload.subtasks.map((t, idx) => ({
+        id: typeof t === 'object' && t.id ? t.id : `st-${Date.now()}-${idx}`,
+        mission_id: id,
+        title: typeof t === 'string' ? t : (t as any).title,
+        is_completed: typeof t === 'object' ? Boolean(t.is_completed) : false,
+        order_index: idx,
+        created_at: typeof t === 'object' && t.created_at ? t.created_at : new Date().toISOString()
+      }));
+    }
+
+    const progress = updatedSubtasks && updatedSubtasks.length > 0
+      ? calculateMissionProgress(updatedSubtasks)
+      : (payload.progress_percentage !== undefined ? payload.progress_percentage : mission.progress_percentage);
+
     const updated: Mission = {
       ...mission,
       ...payload,
+      subtasks: updatedSubtasks,
+      progress_percentage: progress,
       updated_at: new Date().toISOString()
     };
 
@@ -299,18 +337,35 @@ class MemoryStore {
 
   // --- GOALS ---
   getGoals(userId: string) {
-    return this.goals.filter((g) => g.user_id === userId);
+    let userGoals = this.goals.filter((g) => g.user_id === userId);
+    if (userGoals.length === 0 && userId !== '00000000-0000-0000-0000-000000000001') {
+      INITIAL_GOALS.forEach((ig, i) => {
+        const gid = `g-${Date.now()}-${i}`;
+        this.goals.push({
+          ...ig,
+          id: gid,
+          user_id: userId,
+          milestones: ig.milestones ? ig.milestones.map((ms, j) => ({
+            ...ms,
+            id: `ms-${Date.now()}-${i}-${j}`,
+            goal_id: gid
+          })) : []
+        });
+      });
+      userGoals = this.goals.filter((g) => g.user_id === userId);
+    }
+    return userGoals;
   }
 
   createGoal(userId: string, payload: Partial<Goal> & { milestones?: (string | GoalMilestone)[] }) {
     const rawMilestones = payload.milestones || [];
     const newGoalId = `g-${Date.now()}`;
     const newMilestones: GoalMilestone[] = rawMilestones.map((t, index) => ({
-      id: `ms-${Date.now()}-${index}`,
+      id: typeof t === 'object' && t.id ? t.id : `ms-${Date.now()}-${index}`,
       goal_id: newGoalId,
       title: typeof t === 'string' ? t : (t as any).title,
       order_index: index,
-      is_completed: false,
+      is_completed: typeof t === 'object' ? Boolean(t.is_completed) : false,
       created_at: new Date().toISOString()
     }));
 
@@ -330,6 +385,39 @@ class MemoryStore {
 
     this.goals.unshift(newGoal);
     return newGoal;
+  }
+
+  updateGoal(userId: string, id: string, payload: Partial<Goal> & { milestones?: (string | GoalMilestone)[] }) {
+    const index = this.goals.findIndex((g) => g.id === id && g.user_id === userId);
+    if (index === -1) return null;
+
+    const goal = this.goals[index];
+    let updatedMilestones = goal.milestones;
+    if (payload.milestones) {
+      updatedMilestones = payload.milestones.map((t, idx) => ({
+        id: typeof t === 'object' && t.id ? t.id : `ms-${Date.now()}-${idx}`,
+        goal_id: id,
+        title: typeof t === 'string' ? t : (t as any).title,
+        order_index: idx,
+        is_completed: typeof t === 'object' ? Boolean(t.is_completed) : false,
+        created_at: typeof t === 'object' && t.created_at ? t.created_at : new Date().toISOString()
+      }));
+    }
+
+    const updated: Goal = {
+      ...goal,
+      ...payload,
+      milestones: updatedMilestones,
+      updated_at: new Date().toISOString()
+    };
+    this.goals[index] = updated;
+    return updated;
+  }
+
+  deleteGoal(userId: string, id: string) {
+    const prevLen = this.goals.length;
+    this.goals = this.goals.filter((g) => !(g.id === id && g.user_id === userId));
+    return this.goals.length < prevLen;
   }
 
   toggleMilestone(userId: string, goalId: string, milestoneId: string, isCompleted: boolean) {
@@ -355,7 +443,18 @@ class MemoryStore {
 
   // --- HABITS ---
   getHabits(userId: string) {
-    return this.habits.filter((h) => h.user_id === userId && !h.is_archived);
+    let userHabits = this.habits.filter((h) => h.user_id === userId && !h.is_archived);
+    if (userHabits.length === 0 && userId !== '00000000-0000-0000-0000-000000000001') {
+      INITIAL_HABITS.forEach((ih, i) => {
+        this.habits.push({
+          ...ih,
+          id: `h-${Date.now()}-${i}`,
+          user_id: userId
+        });
+      });
+      userHabits = this.habits.filter((h) => h.user_id === userId && !h.is_archived);
+    }
+    return userHabits;
   }
 
   createHabit(userId: string, payload: Partial<Habit>) {
@@ -376,6 +475,25 @@ class MemoryStore {
     };
     this.habits.unshift(newHabit);
     return newHabit;
+  }
+
+  updateHabit(userId: string, id: string, payload: Partial<Habit>) {
+    const index = this.habits.findIndex((h) => h.id === id && h.user_id === userId);
+    if (index === -1) return null;
+
+    const updated: Habit = {
+      ...this.habits[index],
+      ...payload,
+      updated_at: new Date().toISOString()
+    };
+    this.habits[index] = updated;
+    return updated;
+  }
+
+  deleteHabit(userId: string, id: string) {
+    const prevLen = this.habits.length;
+    this.habits = this.habits.filter((h) => !(h.id === id && h.user_id === userId));
+    return this.habits.length < prevLen;
   }
 
   recordHabitCheckin(userId: string, habitId: string, dateStr: string, count: number = 1, notes?: string) {

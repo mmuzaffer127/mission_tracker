@@ -435,3 +435,4 @@ VALUES
     ('goal_crusher', 'Apex Victor', 'Successfully achieved a primary quarterly or annual goal.', 'Trophy', 300, '{"type": "goals_achieved", "count": 1}'),
     ('unstoppable_30', 'Unbreakable Momentum', 'Maintained a 30-day streak across core habits.', 'ShieldCheck', 500, '{"type": "habit_streak", "count": 30}')
 ON CONFLICT (slug) DO NOTHING;
+

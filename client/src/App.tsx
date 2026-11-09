@@ -3,8 +3,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext.js';
 import { SoundProvider } from './contexts/SoundContext.js';
 import { AppLayout } from './layouts/AppLayout.js';
+import { ProtectedRoute } from './components/auth/ProtectedRoute.js';
 
 // Pages
+import { LandingPage } from './pages/LandingPage.js';
+import { AboutPage } from './pages/AboutPage.js';
 import { DashboardPage } from './pages/DashboardPage.js';
 import { MissionsPage } from './pages/MissionsPage.js';
 import { GoalsPage } from './pages/GoalsPage.js';
@@ -20,6 +23,7 @@ import { CalendarPage } from './pages/CalendarPage.js';
 import { SettingsPage } from './pages/SettingsPage.js';
 import { LoginPage } from './pages/auth/LoginPage.js';
 import { SignupPage } from './pages/auth/SignupPage.js';
+import { AuthCallbackPage } from './pages/auth/AuthCallbackPage.js';
 
 export function App() {
   return (
@@ -27,13 +31,23 @@ export function App() {
       <SoundProvider>
         <BrowserRouter>
           <Routes>
+            {/* Public Pages */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
-            {/* Core Application Shell */}
-            <Route element={<AppLayout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* Protected Core Application Shell */}
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/missions" element={<MissionsPage />} />
               <Route path="/goals" element={<GoalsPage />} />
@@ -50,7 +64,7 @@ export function App() {
             </Route>
 
             {/* Catch-all redirect */}
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </SoundProvider>

@@ -22,3 +22,4 @@ export async function createAchievement(req: AuthenticatedRequest, res: Response
     res.status(500).json({ success: false, error: error.message });
   }
 }
+

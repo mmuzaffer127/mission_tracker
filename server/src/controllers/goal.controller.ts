@@ -38,3 +38,31 @@ export async function toggleMilestone(req: AuthenticatedRequest, res: Response) 
     res.status(500).json({ success: false, error: error.message });
   }
 }
+
+export async function updateGoal(req: AuthenticatedRequest, res: Response) {
+  try {
+    const userId = req.userId!;
+    const goalId = req.params.id as string;
+    const updated = dbStore.updateGoal(userId, goalId, req.body);
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'Goal not found' });
+    }
+    res.json({ success: true, data: updated });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+}
+
+export async function deleteGoal(req: AuthenticatedRequest, res: Response) {
+  try {
+    const userId = req.userId!;
+    const goalId = req.params.id as string;
+    const deleted = dbStore.deleteGoal(userId, goalId);
+    if (!deleted) {
+      return res.status(404).json({ success: false, error: 'Goal not found' });
+    }
+    res.json({ success: true, message: 'Goal deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+}

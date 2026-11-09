@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Trophy, Plus, ExternalLink, Calendar, Award, Sparkles } from 'lucide-react';
+import { Trophy, Plus, ExternalLink, Calendar } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { Achievement } from '../types/index.js';
 import { Modal } from '../components/ui/Modal.js';
@@ -66,26 +66,35 @@ export const AchievementsPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
-            <Trophy className="w-6 h-6 text-brand-amber" />
+          <h1
+            className="text-2xl sm:text-3xl font-black text-white flex items-center space-x-2"
+            style={{ letterSpacing: '-0.06em' }}
+          >
+            <Trophy className="w-6 h-6 text-white" />
             <span>Achievement Wall of Fame</span>
           </h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
             Historical records are permanent. Every month builds your lifetime resume of accomplishments.
           </p>
         </div>
 
         <div className="flex items-center space-x-3">
           {/* Historical Month Selector */}
-          <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-surface-100 border border-surface-border text-xs text-gray-300">
-            <Calendar className="w-4 h-4 text-brand-blue" />
+          <div
+            className="flex items-center space-x-2 px-3 py-1.5 rounded-xl text-xs text-white"
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+            }}
+          >
+            <Calendar className="w-4 h-4 text-white/70" />
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
               className="bg-transparent focus:outline-none text-white font-mono cursor-pointer"
             >
               {monthOptions.map((m) => (
-                <option key={m.val} value={m.val} className="bg-surface-200">
+                <option key={m.val} value={m.val} className="bg-[#1129e2] text-white">
                   {m.label}
                 </option>
               ))}
@@ -94,7 +103,7 @@ export const AchievementsPage: React.FC = () => {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-amber to-orange-500 text-white text-xs font-semibold shadow-glow hover:brightness-110 active:scale-95 transition-all"
+            className="btn-primary flex items-center space-x-1.5 text-xs"
           >
             <Plus className="w-4 h-4" />
             <span>Record Breakthrough</span>
@@ -104,43 +113,62 @@ export const AchievementsPage: React.FC = () => {
 
       {/* Grid of Verified Breakthroughs */}
       {achievements.length === 0 ? (
-        <div className="glass-panel rounded-2xl p-12 text-center text-gray-400">
-          <Trophy className="w-10 h-10 mx-auto mb-3 text-gray-600" />
-          <h3 className="text-base font-bold text-gray-300">No achievements recorded for this month yet.</h3>
-          <p className="text-xs text-gray-500 mt-1">Complete your tactical missions to unlock verified entries on your Wall of Fame.</p>
+        <div
+          className="rounded-2xl p-12 text-center"
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+          }}
+        >
+          <Trophy className="w-12 h-12 mx-auto mb-3 opacity-30 text-white" />
+          <h3 className="text-base font-bold text-white">No achievements recorded for this month yet.</h3>
+          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
+            Complete your tactical missions to unlock verified entries on your Wall of Fame.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {achievements.map((ach) => (
             <div
               key={ach.id}
-              className="glass-card p-6 border border-surface-border flex flex-col justify-between space-y-4 hover:border-brand-amber/40 transition-all"
+              className="glass-card p-6 flex flex-col justify-between space-y-4"
             >
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                  <span
+                    className="text-[11px] font-mono px-2 py-0.5 rounded-md font-bold text-white"
+                    style={{
+                      background: 'rgba(255,255,255,0.15)',
+                      boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.25)'
+                    }}
+                  >
                     +{ach.xp_awarded} XP
                   </span>
-                  <span className="text-[11px] text-gray-400 font-mono">
+                  <span className="text-[11px] font-mono" style={{ color: 'rgba(255,255,255,0.55)' }}>
                     {new Date(ach.unlocked_at).toLocaleDateString()}
                   </span>
                 </div>
 
                 <h3 className="text-base font-bold text-white mt-3">{ach.title}</h3>
                 {ach.description && (
-                  <p className="text-xs text-gray-400 mt-2 leading-relaxed">{ach.description}</p>
+                  <p className="text-xs mt-2 leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                    {ach.description}
+                  </p>
                 )}
               </div>
 
               {ach.evidence && ach.evidence.length > 0 && (
-                <div className="pt-3 border-t border-surface-border space-y-1">
+                <div
+                  className="pt-3 space-y-1"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}
+                >
                   {ach.evidence.map((ev) => (
                     <a
                       key={ev.id}
                       href={ev.external_url || '#'}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center space-x-1.5 text-xs text-brand-cyan hover:underline"
+                      className="flex items-center space-x-1.5 text-xs text-white/80 hover:text-white hover:underline transition-opacity"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>{ev.caption || 'Verified Evidence Link'}</span>
@@ -157,50 +185,53 @@ export const AchievementsPage: React.FC = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Record Major Breakthrough">
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Breakthrough Title *</label>
+            <label className="glass-label">Breakthrough Title *</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Published Mission OS to Production / Read 300 pages"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none focus:border-brand-amber"
+              className="glass-input text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Synthesized Impact / Story</label>
+            <label className="glass-label">Synthesized Impact / Story</label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What makes this a milestone accomplishment? What challenges did you overcome?"
-              className="w-full px-3.5 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none resize-none"
+              className="glass-textarea text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Proof of Work URL (GitHub / Demo / Doc)</label>
+            <label className="glass-label">Proof of Work URL (GitHub / Demo / Doc)</label>
             <input
               type="url"
               value={externalUrl}
               onChange={(e) => setExternalUrl(e.target.value)}
               placeholder="https://github.com/your-repo"
-              className="w-full px-3.5 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-xs focus:outline-none"
+              className="glass-input text-xs"
             />
           </div>
 
-          <div className="flex justify-end space-x-3 pt-3 border-t border-surface-border">
+          <div
+            className="flex justify-end space-x-3 pt-3"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.14)' }}
+          >
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 text-xs text-gray-400 hover:text-white"
+              className="btn-glass text-xs"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-brand-amber to-orange-500 text-white text-xs font-semibold shadow-glow hover:brightness-110"
+              className="btn-primary text-xs"
             >
               Add to Wall of Fame
             </button>

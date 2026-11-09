@@ -80,41 +80,48 @@ export const CreateMissionModal: React.FC<CreateMissionModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title="Launch New Mission">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 text-xs rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
+          <div
+            className="p-3 text-xs rounded-xl"
+            style={{
+              background: 'rgba(255, 100, 100, 0.2)',
+              boxShadow: 'inset 0 0 0 1px rgba(255, 100, 100, 0.4)',
+              color: '#ffffff'
+            }}
+          >
             {error}
           </div>
         )}
 
         <div>
-          <label className="block text-xs font-semibold text-gray-300 mb-1">Mission Title *</label>
+          <label className="glass-label">Mission Title *</label>
           <input
             type="text"
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Master PostgreSQL indexing & query plans"
-            className="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none focus:border-brand-blue"
+            className="glass-input text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-300 mb-1">Brief Description</label>
+          <label className="glass-label">Brief Description</label>
           <textarea
             rows={2}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Strategic objective and success criteria..."
-            className="w-full px-3.5 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none focus:border-brand-blue resize-none"
+            className="glass-textarea text-sm"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Priority Level</label>
+            <label className="glass-label">Priority Level</label>
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as MissionPriority)}
-              className="w-full px-3 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none focus:border-brand-blue"
+              className="glass-select text-sm"
             >
               <option value="low">Low Priority</option>
               <option value="medium">Medium Priority</option>
@@ -124,12 +131,12 @@ export const CreateMissionModal: React.FC<CreateMissionModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Target Deadline</label>
+            <label className="glass-label">Target Deadline</label>
             <input
               type="datetime-local"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none focus:border-brand-blue"
+              className="glass-input text-sm"
             />
           </div>
         </div>
@@ -137,11 +144,11 @@ export const CreateMissionModal: React.FC<CreateMissionModalProps> = ({
         {/* Tactical Subtasks */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-semibold text-gray-300">Tactical Subtasks</label>
+            <label className="glass-label mb-0">Tactical Subtasks</label>
             <button
               type="button"
               onClick={handleAddSubtask}
-              className="text-xs flex items-center space-x-1 text-brand-cyan hover:underline"
+              className="text-xs flex items-center space-x-1 text-white/80 hover:text-white transition-opacity"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Subtask</span>
@@ -155,13 +162,13 @@ export const CreateMissionModal: React.FC<CreateMissionModalProps> = ({
                   value={st}
                   onChange={(e) => handleSubtaskChange(i, e.target.value)}
                   placeholder={`Subtask #${i + 1}`}
-                  className="flex-1 px-3 py-1.5 rounded-lg bg-surface-50 border border-surface-border text-white text-xs focus:outline-none focus:border-brand-blue"
+                  className="glass-input text-xs"
                 />
                 {subtasks.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveSubtask(i)}
-                    className="p-1.5 text-gray-500 hover:text-rose-400 transition-colors"
+                    className="p-1.5 text-white/50 hover:text-white transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -172,11 +179,11 @@ export const CreateMissionModal: React.FC<CreateMissionModalProps> = ({
         </div>
 
         {/* Modal Actions */}
-        <div className="flex items-center justify-end space-x-3 pt-3 border-t border-surface-border">
+        <div className="flex items-center justify-end space-x-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.14)' }}>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition-colors"
+            className="btn-glass text-xs"
           >
             Cancel
           </button>
@@ -184,7 +191,7 @@ export const CreateMissionModal: React.FC<CreateMissionModalProps> = ({
             type="submit"
             disabled={submitting}
             onClick={playClick}
-            className="flex items-center space-x-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-blue to-blue-600 text-white text-xs font-semibold shadow-glow hover:brightness-110 active:scale-95 disabled:opacity-50 transition-all"
+            className="btn-primary flex items-center space-x-1.5 text-xs disabled:opacity-50"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>{submitting ? 'Launching...' : 'Deploy Mission'}</span>

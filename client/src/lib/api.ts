@@ -50,6 +50,7 @@ export const api = {
   // Goals
   getGoals: () => fetchApi<any[]>('/goals'),
   createGoal: (data: any) => fetchApi<any>('/goals', { method: 'POST', body: JSON.stringify(data) }),
+  deleteGoal: (id: string) => fetchApi<void>(`/goals/${id}`, { method: 'DELETE' }),
   toggleMilestone: (goalId: string, milestoneId: string, is_completed: boolean) =>
     fetchApi<any>(`/goals/${goalId}/milestones/${milestoneId}`, {
       method: 'PATCH',
@@ -59,6 +60,7 @@ export const api = {
   // Habits
   getHabits: () => fetchApi<any[]>('/habits'),
   createHabit: (data: any) => fetchApi<any>('/habits', { method: 'POST', body: JSON.stringify(data) }),
+  deleteHabit: (id: string) => fetchApi<void>(`/habits/${id}`, { method: 'DELETE' }),
   checkinHabit: (id: string, date: string, count = 1, notes?: string) =>
     fetchApi<any>(`/habits/${id}/checkin`, {
       method: 'POST',
@@ -81,3 +83,4 @@ export const api = {
       body: JSON.stringify({ yearMonth })
     })
 };
+

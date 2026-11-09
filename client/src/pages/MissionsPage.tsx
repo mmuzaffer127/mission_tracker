@@ -3,10 +3,9 @@ import {
   Target,
   Plus,
   Search,
-  Filter,
   CheckCircle2,
   Trash2,
-  Sparkles,
+  Pencil,
   Columns,
   List
 } from 'lucide-react';
@@ -14,6 +13,7 @@ import { api } from '../lib/api.js';
 import { Mission, MissionPriority, MissionStatus } from '../types/index.js';
 import { StatusBadge } from '../components/ui/StatusBadge.js';
 import { CreateMissionModal } from '../components/missions/CreateMissionModal.js';
+import { EditMissionModal } from '../components/missions/EditMissionModal.js';
 import { useSound } from '../contexts/SoundContext.js';
 
 export const MissionsPage: React.FC = () => {
@@ -24,6 +24,7 @@ export const MissionsPage: React.FC = () => {
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingMission, setEditingMission] = useState<Mission | null>(null);
 
   const { playComplete, playClick } = useSound();
 
@@ -80,11 +81,11 @@ export const MissionsPage: React.FC = () => {
     }
   };
 
-  const columns: { status: MissionStatus; title: string; color: string }[] = [
-    { status: 'not_started', title: 'Not Started', color: 'border-gray-500/30' },
-    { status: 'in_progress', title: 'In Progress', color: 'border-blue-500/30' },
-    { status: 'on_hold', title: 'On Hold', color: 'border-amber-500/30' },
-    { status: 'completed', title: 'Completed', color: 'border-emerald-500/30' }
+  const columns: { status: MissionStatus; title: string }[] = [
+    { status: 'not_started', title: 'Not Started' },
+    { status: 'in_progress', title: 'In Progress' },
+    { status: 'on_hold', title: 'On Hold' },
+    { status: 'completed', title: 'Completed' }
   ];
 
   return (
@@ -92,22 +93,31 @@ export const MissionsPage: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
-            <Target className="w-6 h-6 text-brand-blue" />
+          <h1
+            className="text-2xl sm:text-3xl font-black text-white flex items-center space-x-2"
+            style={{ letterSpacing: '-0.06em' }}
+          >
+            <Target className="w-6 h-6 text-white" />
             <span>Mission Management HQ</span>
           </h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
             Break big ambitions into tactical missions and execute with military discipline.
           </p>
         </div>
 
         <div className="flex items-center space-x-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center p-1 rounded-xl bg-surface-100 border border-surface-border">
+          <div
+            className="flex items-center p-1 rounded-xl"
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+            }}
+          >
             <button
               onClick={() => setViewMode('kanban')}
               className={`p-1.5 rounded-lg text-xs transition-colors ${
-                viewMode === 'kanban' ? 'bg-surface-50 text-brand-blue font-bold shadow-sm' : 'text-gray-400 hover:text-white'
+                viewMode === 'kanban' ? 'bg-white text-[#1129e2] font-bold shadow-sm' : 'text-white/60 hover:text-white'
               }`}
               title="Kanban Board View"
             >
@@ -116,7 +126,7 @@ export const MissionsPage: React.FC = () => {
             <button
               onClick={() => setViewMode('table')}
               className={`p-1.5 rounded-lg text-xs transition-colors ${
-                viewMode === 'table' ? 'bg-surface-50 text-brand-blue font-bold shadow-sm' : 'text-gray-400 hover:text-white'
+                viewMode === 'table' ? 'bg-white text-[#1129e2] font-bold shadow-sm' : 'text-white/60 hover:text-white'
               }`}
               title="Table View"
             >
@@ -126,7 +136,7 @@ export const MissionsPage: React.FC = () => {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-blue to-blue-600 text-white text-xs font-semibold shadow-glow hover:brightness-110 active:scale-95 transition-all"
+            className="btn-primary flex items-center space-x-1.5 text-xs"
           >
             <Plus className="w-4 h-4" />
             <span>Create Mission</span>
@@ -135,15 +145,21 @@ export const MissionsPage: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-2xl bg-surface-100/60 border border-surface-border">
+      <div
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-2xl"
+        style={{
+          background: 'rgba(255,255,255,0.08)',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.15)'
+        }}
+      >
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-gray-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-2.5 text-white/50" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search missions by keyword..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-xs focus:outline-none focus:border-brand-blue"
+            className="glass-input pl-10 pr-4 py-2 text-xs"
           />
         </div>
 
@@ -151,7 +167,7 @@ export const MissionsPage: React.FC = () => {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-surface-50 border border-surface-border text-xs text-gray-300 focus:outline-none"
+            className="glass-select px-3 py-2 text-xs"
           >
             <option value="all">All Priorities</option>
             <option value="critical">Critical</option>
@@ -163,7 +179,7 @@ export const MissionsPage: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-surface-50 border border-surface-border text-xs text-gray-300 focus:outline-none"
+            className="glass-select px-3 py-2 text-xs"
           >
             <option value="all">All Statuses</option>
             <option value="not_started">Not Started</option>
@@ -182,14 +198,32 @@ export const MissionsPage: React.FC = () => {
             return (
               <div
                 key={col.status}
-                className="flex flex-col bg-surface-200/60 rounded-2xl border border-surface-border p-4 min-h-[500px]"
+                className="flex flex-col rounded-2xl p-4 min-h-[500px]"
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.12)'
+                }}
               >
-                <div className="flex items-center justify-between pb-3 mb-3 border-b border-surface-border">
+                <div
+                  className="flex items-center justify-between pb-3 mb-3"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}
+                >
                   <div className="flex items-center space-x-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-brand-blue" />
-                    <h3 className="text-xs font-bold text-gray-200 uppercase tracking-wider">{col.title}</h3>
+                    <span className="w-2.5 h-2.5 rounded-full bg-white/70" />
+                    <h3
+                      className="text-xs font-bold text-white uppercase tracking-wider"
+                      style={{ letterSpacing: '0.05em' }}
+                    >
+                      {col.title}
+                    </h3>
                   </div>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-surface-100 border border-surface-border text-gray-400 font-mono">
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full font-mono text-white/80"
+                    style={{
+                      background: 'rgba(255,255,255,0.12)',
+                      boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+                    }}
+                  >
                     {colMissions.length}
                   </span>
                 </div>
@@ -198,40 +232,65 @@ export const MissionsPage: React.FC = () => {
                   {colMissions.map((mission) => (
                     <div
                       key={mission.id}
-                      className="p-4 rounded-xl bg-surface-100/80 border border-surface-border hover:border-brand-blue/40 transition-all shadow-card space-y-3"
+                      className="p-4 rounded-xl transition-all space-y-3"
+                      style={{
+                        background: 'rgba(255,255,255,0.08)',
+                        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.13)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+                      }}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <StatusBadge priority={mission.priority} />
-                        <button
-                          onClick={() => handleDelete(mission.id)}
-                          className="text-gray-500 hover:text-rose-400 transition-colors"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center space-x-1">
+                          <button
+                            onClick={() => setEditingMission(mission)}
+                            className="p-1 text-white/40 hover:text-cyan-300 transition-colors"
+                            title="Edit Mission"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(mission.id)}
+                            className="p-1 text-white/40 hover:text-red-400 transition-colors"
+                            title="Delete Mission"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
 
                       <div>
                         <h4 className="text-sm font-semibold text-white">{mission.title}</h4>
                         {mission.description && (
-                          <p className="text-xs text-gray-400 mt-1 line-clamp-2">{mission.description}</p>
+                          <p className="text-xs mt-1 line-clamp-2" style={{ color: 'rgba(255,255,255,0.60)' }}>
+                            {mission.description}
+                          </p>
                         )}
                       </div>
 
                       {/* Subtasks */}
                       {mission.subtasks && mission.subtasks.length > 0 && (
-                        <div className="pt-2 border-t border-surface-border/50 space-y-1.5">
+                        <div
+                          className="pt-2 space-y-1.5"
+                          style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}
+                        >
                           {mission.subtasks.map((st) => (
                             <label
                               key={st.id}
-                              className="flex items-center space-x-2 text-xs text-gray-300 cursor-pointer select-none"
+                              className="flex items-center space-x-2 text-xs cursor-pointer select-none"
+                              style={{ color: st.is_completed ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.80)' }}
                             >
                               <input
                                 type="checkbox"
                                 checked={st.is_completed}
                                 onChange={() => handleSubtaskToggle(mission.id, st.id, st.is_completed)}
-                                className="rounded border-surface-border bg-surface-50 text-brand-blue focus:ring-0"
                               />
-                              <span className={st.is_completed ? 'line-through text-gray-500 text-[11px]' : 'text-[11px]'}>
+                              <span className={st.is_completed ? 'line-through text-[11px]' : 'text-[11px]'}>
                                 {st.title}
                               </span>
                             </label>
@@ -240,18 +299,22 @@ export const MissionsPage: React.FC = () => {
                       )}
 
                       {/* Card Footer */}
-                      <div className="flex items-center justify-between pt-2 border-t border-surface-border text-[11px]">
+                      <div
+                        className="flex items-center justify-between pt-2 text-[11px]"
+                        style={{ borderTop: '1px solid rgba(255,255,255,0.10)' }}
+                      >
                         <select
                           value={mission.status}
                           onChange={(e) => handleStatusChange(mission.id, e.target.value as MissionStatus)}
-                          className="bg-surface-50 border border-surface-border text-gray-300 rounded px-2 py-0.5 text-[10px] focus:outline-none"
+                          className="glass-select rounded px-2 py-0.5 text-[10px]"
+                          style={{ width: 'auto' }}
                         >
                           <option value="not_started">Not Started</option>
                           <option value="in_progress">In Progress</option>
                           <option value="on_hold">On Hold</option>
                           <option value="completed">Completed</option>
                         </select>
-                        <span className="font-mono text-brand-cyan">{mission.progress_percentage}%</span>
+                        <span className="font-mono text-white/80">{mission.progress_percentage}%</span>
                       </div>
                     </div>
                   ))}
@@ -262,9 +325,21 @@ export const MissionsPage: React.FC = () => {
         </div>
       ) : (
         /* Table View */
-        <div className="glass-panel rounded-2xl overflow-hidden border border-surface-border">
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+          }}
+        >
           <table className="w-full text-left text-xs">
-            <thead className="bg-surface-100 text-gray-400 uppercase font-mono tracking-wider border-b border-surface-border">
+            <thead
+              className="text-white/60 uppercase font-mono tracking-wider"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                borderBottom: '1px solid rgba(255,255,255,0.12)'
+              }}
+            >
               <tr>
                 <th className="py-3 px-4">Mission</th>
                 <th className="py-3 px-4">Priority</th>
@@ -274,21 +349,37 @@ export const MissionsPage: React.FC = () => {
                 <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-border">
+            <tbody className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
               {missions.map((m) => (
-                <tr key={m.id} className="hover:bg-surface-50/50 transition-colors">
-                  <td className="py-3 px-4 font-semibold text-gray-200">{m.title}</td>
+                <tr
+                  key={m.id}
+                  className="transition-colors hover:bg-white/5"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <td className="py-3 px-4 font-semibold text-white">{m.title}</td>
                   <td className="py-3 px-4"><StatusBadge priority={m.priority} /></td>
                   <td className="py-3 px-4"><StatusBadge status={m.status} /></td>
-                  <td className="py-3 px-4 font-mono text-brand-cyan">{m.progress_percentage}%</td>
-                  <td className="py-3 px-4 text-gray-400">{m.deadline ? new Date(m.deadline).toLocaleDateString() : '—'}</td>
+                  <td className="py-3 px-4 font-mono text-white/80">{m.progress_percentage}%</td>
+                  <td className="py-3 px-4" style={{ color: 'rgba(255,255,255,0.60)' }}>
+                    {m.deadline ? new Date(m.deadline).toLocaleDateString() : '—'}
+                  </td>
                   <td className="py-3 px-4 text-right">
-                    <button
-                      onClick={() => handleDelete(m.id)}
-                      className="text-gray-500 hover:text-rose-400 p-1"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center justify-end space-x-1">
+                      <button
+                        onClick={() => setEditingMission(m)}
+                        className="text-white/40 hover:text-cyan-300 p-1 transition-colors"
+                        title="Edit Mission"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(m.id)}
+                        className="text-white/40 hover:text-red-400 p-1 transition-colors"
+                        title="Delete Mission"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -302,6 +393,14 @@ export const MissionsPage: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onMissionCreated={fetchMissions}
+      />
+
+      {/* Edit Mission Modal */}
+      <EditMissionModal
+        mission={editingMission}
+        isOpen={!!editingMission}
+        onClose={() => setEditingMission(null)}
+        onMissionUpdated={fetchMissions}
       />
     </div>
   );

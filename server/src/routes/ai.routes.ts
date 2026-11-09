@@ -12,3 +12,4 @@ router.post('/generate-roadmap', validateBody(GenerateRoadmapSchema), generateRo
 router.post('/monthly-synthesis', validateBody(MonthlyReportAiSchema), generateMonthlySynthesis);
 
 export default router;
+

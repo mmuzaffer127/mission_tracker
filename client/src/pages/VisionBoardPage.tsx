@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, Plus, Sparkles, Quote, Image } from 'lucide-react';
+import { Eye, Plus, Quote } from 'lucide-react';
 import { Modal } from '../components/ui/Modal.js';
 import { useSound } from '../contexts/SoundContext.js';
 
@@ -68,18 +68,21 @@ export const VisionBoardPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
-            <Eye className="w-6 h-6 text-brand-emerald" />
+          <h1
+            className="text-2xl sm:text-3xl font-black text-white flex items-center space-x-2"
+            style={{ letterSpacing: '-0.06em' }}
+          >
+            <Eye className="w-6 h-6 text-white" />
             <span>Aspirational Vision Board</span>
           </h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
             Imprint your long-range subconscious horizon with clarity, imagery, and relentless ambition.
           </p>
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-emerald to-teal-500 text-black text-xs font-semibold shadow-glow hover:brightness-110 active:scale-95 transition-all"
+          className="btn-primary flex items-center space-x-1.5 text-xs"
         >
           <Plus className="w-4 h-4" />
           <span>Pin Inspiration</span>
@@ -91,7 +94,7 @@ export const VisionBoardPage: React.FC = () => {
         {items.map((item) => (
           <div
             key={item.id}
-            className="group glass-card overflow-hidden border border-surface-border hover:border-emerald-500/40 transition-all flex flex-col justify-between"
+            className="group glass-card overflow-hidden flex flex-col justify-between"
           >
             {item.imageUrl && (
               <div className="h-44 w-full overflow-hidden relative">
@@ -100,7 +103,14 @@ export const VisionBoardPage: React.FC = () => {
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <span className="absolute top-3 left-3 text-[10px] font-mono px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-emerald-400 border border-emerald-500/30">
+                <span
+                  className="absolute top-3 left-3 text-[10px] font-mono px-2 py-0.5 rounded-md text-white font-bold"
+                  style={{
+                    background: 'rgba(17,41,226,0.85)',
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.25)'
+                  }}
+                >
                   {item.tag}
                 </span>
               </div>
@@ -110,8 +120,8 @@ export const VisionBoardPage: React.FC = () => {
               <div>
                 <h3 className="text-base font-bold text-white tracking-wide">{item.title}</h3>
                 {item.quote && (
-                  <p className="text-xs text-gray-400 italic mt-2 flex items-start space-x-1.5 leading-relaxed">
-                    <Quote className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs italic mt-2 flex items-start space-x-1.5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.70)' }}>
+                    <Quote className="w-3.5 h-3.5 text-white/80 flex-shrink-0 mt-0.5" />
                     <span>"{item.quote}"</span>
                   </p>
                 )}
@@ -125,50 +135,53 @@ export const VisionBoardPage: React.FC = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Pin to Vision Board">
         <form onSubmit={handleAddItem} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Aspiration / Vision *</label>
+            <label className="glass-label">Aspiration / Vision *</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Master Machine Learning Engineering & Launch SaaS"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none"
+              className="glass-input text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Anchoring Quote</label>
+            <label className="glass-label">Anchoring Quote</label>
             <input
               type="text"
               value={quote}
               onChange={(e) => setQuote(e.target.value)}
               placeholder="e.g. Fortune favors the prepared mind."
-              className="w-full px-3.5 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-xs focus:outline-none"
+              className="glass-input text-xs"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">Image URL</label>
+            <label className="glass-label">Image URL</label>
             <input
               type="url"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://images.unsplash.com/..."
-              className="w-full px-3.5 py-2 rounded-xl bg-surface-50 border border-surface-border text-white text-xs focus:outline-none"
+              className="glass-input text-xs"
             />
           </div>
 
-          <div className="flex justify-end space-x-3 pt-3 border-t border-surface-border">
+          <div
+            className="flex justify-end space-x-3 pt-3"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.14)' }}
+          >
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 text-xs text-gray-400 hover:text-white"
+              className="btn-glass text-xs"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-brand-emerald text-black text-xs font-semibold hover:brightness-110"
+              className="btn-primary text-xs"
             >
               Pin to Board
             </button>

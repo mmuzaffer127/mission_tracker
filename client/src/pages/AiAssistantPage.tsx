@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Send, BrainCircuit, ArrowRight, CheckCircle2, Target } from 'lucide-react';
+import { Sparkles, BrainCircuit, CheckCircle2, Target } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { useSound } from '../contexts/SoundContext.js';
 
@@ -62,20 +62,29 @@ export const AiAssistantPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <div>
-        <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
-          <BrainCircuit className="w-6 h-6 text-brand-purple" />
+        <h1
+          className="text-2xl sm:text-3xl font-black text-white flex items-center space-x-2"
+          style={{ letterSpacing: '-0.06em' }}
+        >
+          <BrainCircuit className="w-6 h-6 text-white" />
           <span>Gemini AI Growth Architect</span>
         </h1>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
           Turn vague ambitions into structured, ordered milestones and tactical missions powered by Gemini 2.5.
         </p>
       </div>
 
       {/* Generator Prompt Panel */}
-      <div className="glass-panel rounded-2xl p-6 border border-surface-border space-y-4">
+      <div
+        className="rounded-2xl p-6 space-y-4"
+        style={{
+          background: 'rgba(255,255,255,0.08)',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+        }}
+      >
         <form onSubmit={handleGenerate} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">
+            <label className="glass-label">
               Your Big Ambition / Target Outcome *
             </label>
             <input
@@ -84,12 +93,12 @@ export const AiAssistantPage: React.FC = () => {
               value={ambitionInput}
               onChange={(e) => setAmbitionInput(e.target.value)}
               placeholder="e.g. Master Distributed Systems Engineering & Deploy Full-Stack Microservices"
-              className="w-full px-4 py-3 rounded-xl bg-surface-50 border border-surface-border text-white text-sm focus:outline-none focus:border-brand-purple"
+              className="glass-input text-sm py-3"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1">
+            <label className="glass-label">
               Personal Context / Constraints / Timeline (Optional)
             </label>
             <textarea
@@ -97,7 +106,7 @@ export const AiAssistantPage: React.FC = () => {
               value={contextInput}
               onChange={(e) => setContextInput(e.target.value)}
               placeholder="e.g. I have 2 hours per day, basic React knowledge, aiming for a 90-day execution sprint."
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-50 border border-surface-border text-white text-xs focus:outline-none resize-none"
+              className="glass-textarea text-xs"
             />
           </div>
 
@@ -105,7 +114,7 @@ export const AiAssistantPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-purple via-indigo-600 to-brand-blue text-white text-xs font-semibold shadow-glow hover:brightness-110 active:scale-95 disabled:opacity-50 flex items-center space-x-2"
+              className="btn-primary flex items-center space-x-2 text-xs disabled:opacity-50"
             >
               <Sparkles className="w-4 h-4" />
               <span>{loading ? 'Synthesizing Roadmap...' : 'Generate Master Roadmap'}</span>
@@ -115,9 +124,15 @@ export const AiAssistantPage: React.FC = () => {
       </div>
 
       {committedSuccess && (
-        <div className="p-4 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between">
+        <div
+          className="p-4 rounded-xl text-xs flex items-center justify-between text-white"
+          style={{
+            background: 'rgba(255,255,255,0.16)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.28)'
+          }}
+        >
           <div className="flex items-center space-x-2">
-            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            <CheckCircle2 className="w-5 h-5 text-white" />
             <span>Successfully committed this goal, all milestones, and missions into your live operating system!</span>
           </div>
         </div>
@@ -125,10 +140,25 @@ export const AiAssistantPage: React.FC = () => {
 
       {/* Generated Roadmap Preview */}
       {generatedRoadmap && (
-        <div className="glass-panel rounded-2xl p-6 border border-purple-500/30 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-surface-border gap-3">
+        <div
+          className="rounded-2xl p-6 space-y-6"
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+          }}
+        >
+          <div
+            className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 gap-3"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}
+          >
             <div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-500/15 text-purple-300 border border-purple-500/30 uppercase">
+              <span
+                className="text-[10px] font-mono px-2 py-0.5 rounded-md uppercase text-white font-bold"
+                style={{
+                  background: 'rgba(255,255,255,0.14)',
+                  boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.22)'
+                }}
+              >
                 AI Architected Plan
               </span>
               <h2 className="text-xl font-bold text-white mt-1">{generatedRoadmap.goalTitle}</h2>
@@ -137,7 +167,7 @@ export const AiAssistantPage: React.FC = () => {
             <button
               onClick={handleCommitToDatabase}
               disabled={committedSuccess}
-              className="px-5 py-2.5 rounded-xl bg-brand-emerald text-black text-xs font-bold shadow-glow hover:brightness-110 active:scale-95 disabled:opacity-50 flex items-center space-x-2"
+              className="btn-primary flex items-center space-x-2 text-xs disabled:opacity-50"
             >
               <Target className="w-4 h-4" />
               <span>{committedSuccess ? 'Committed to OS' : 'Commit All to Database'}</span>
@@ -146,19 +176,32 @@ export const AiAssistantPage: React.FC = () => {
 
           {/* Sequential Milestones */}
           <div>
-            <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">
+            <h3
+              className="text-xs font-bold uppercase tracking-wider mb-3"
+              style={{ color: 'rgba(255,255,255,0.60)' }}
+            >
               1. Sequential Goal Milestones
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {generatedRoadmap.milestones?.map((ms: any, i: number) => (
                 <div
                   key={i}
-                  className="p-3.5 rounded-xl bg-surface-50 border border-surface-border flex items-center space-x-3"
+                  className="p-3.5 rounded-xl flex items-center space-x-3"
+                  style={{
+                    background: 'rgba(255,255,255,0.06)',
+                    boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.12)'
+                  }}
                 >
-                  <span className="w-6 h-6 rounded-full bg-brand-purple/20 text-brand-purple font-mono font-bold text-xs flex items-center justify-center">
+                  <span
+                    className="w-6 h-6 rounded-full font-mono font-bold text-xs flex items-center justify-center"
+                    style={{
+                      background: 'rgba(255,255,255,0.15)',
+                      color: '#ffffff'
+                    }}
+                  >
                     {i + 1}
                   </span>
-                  <span className="text-xs text-gray-200">{ms.title}</span>
+                  <span className="text-xs text-white">{ms.title}</span>
                 </div>
               ))}
             </div>
@@ -166,23 +209,36 @@ export const AiAssistantPage: React.FC = () => {
 
           {/* Actionable Tactical Missions */}
           <div>
-            <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">
+            <h3
+              className="text-xs font-bold uppercase tracking-wider mb-3"
+              style={{ color: 'rgba(255,255,255,0.60)' }}
+            >
               2. Tactical Launch Missions & Subtasks
             </h3>
             <div className="space-y-3">
               {generatedRoadmap.actionableMissions?.map((m: any, i: number) => (
                 <div
                   key={i}
-                  className="p-4 rounded-xl bg-surface-50 border border-surface-border space-y-2"
+                  className="p-4 rounded-xl space-y-2"
+                  style={{
+                    background: 'rgba(255,255,255,0.06)',
+                    boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.12)'
+                  }}
                 >
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold text-white">{m.title}</h4>
-                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                    <span
+                      className="text-[10px] font-mono uppercase px-2 py-0.5 rounded text-white"
+                      style={{
+                        background: 'rgba(255,255,255,0.12)',
+                        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.18)'
+                      }}
+                    >
                       {m.priority} priority
                     </span>
                   </div>
                   {m.subtasks && (
-                    <ul className="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                    <ul className="text-xs space-y-1 list-disc list-inside" style={{ color: 'rgba(255,255,255,0.65)' }}>
                       {m.subtasks.map((st: string, idx: number) => (
                         <li key={idx}>{st}</li>
                       ))}

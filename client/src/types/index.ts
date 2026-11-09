@@ -5,13 +5,17 @@ export type HabitFrequency = 'daily' | 'weekdays' | 'weekends' | 'custom_days';
 
 export interface UserProfile {
   id: string;
-  email: string;
+  email?: string | null;
+  phone?: string | null;
   full_name: string;
-  avatar_url?: string;
-  timezone: string;
+  avatar_url?: string | null;
+  auth_provider?: string;
+  onboarding_completed?: boolean;
+  timezone?: string;
   level: string;
   current_xp: number;
-  next_level_xp: number;
+  xp?: number;
+  next_level_xp?: number;
 }
 
 export interface MissionSubtask {
@@ -142,3 +146,4 @@ export interface DashboardSummary {
   };
   achievementsCount: number;
 }
+

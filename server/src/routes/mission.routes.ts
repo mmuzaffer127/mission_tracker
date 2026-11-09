@@ -27,3 +27,4 @@ router.delete('/:id', deleteMission);
 router.patch('/:id/subtasks/:subtaskId', validateBody(ToggleSubtaskSchema), toggleSubtask);
 
 export default router;
+
