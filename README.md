@@ -8,14 +8,16 @@
 
 **Mission OS** is a premier, dark-mode-first personal growth operating system. Built with an obsessive focus on craft, high-performance typography, and responsive micro-interactions, it integrates:
 
+- **Authentication Suite**: Google OAuth (Gmail), Phone OTP (+91 support with E.164 verification), and Email/Password with 6-digit confirmation codes.
 - **Mission Operations HQ**: Priority-tagged tactical missions with atomic subtask tracking, inline progress recalculations, and Kanban / Table views.
 - **Master Goal Architecture**: Hierarchical goals with multi-year timeframes and sequential milestones that roll up progress automatically.
-- **Habit Mastery & Streak Engine**: Unbreakable streak trackers with a 14-day commit heatmap matrix, daily check-ins, and zero loss of historical records.
+- **Habit Mastery & Streak Engine**: Unbreakable streak trackers with a commit heatmap matrix, daily check-ins, and zero loss of historical records.
 - **Monthly Achievement Wall of Fame**: Permanent monthly achievement archives, historical month navigation, and proof-of-work evidence attachments (GitHub, URLs, certificates).
 - **8-Quadrant Life Balance Telemetry**: Recharts radar visualization across Career, Education, Health, Relationships, Financial Growth, Personal Dev, Creativity, and Spiritual Values.
 - **Hyperfocus Command Center**: Integrated Pomodoro / Deep Work timer with ambient haptic tones and session logs.
 - **Gemini 2.5 AI Growth Architect**: Server-side roadmap generator and monthly retrospective synthesiser using `@google/genai`.
 - **Journal & Future Me Vault**: Daily mental clarity reflections and time-locked letters that remain sealed until the designated horizon date arrives.
+- **Public About Page**: Interactive system showcase, 3-step workflow, and target audience breakdown.
 
 ---
 
@@ -49,11 +51,15 @@ npm --prefix client install
 ### 3. Launch Development Servers
 Run the backend and frontend simultaneously:
 ```bash
+# Launch both with the 1-click launcher on Windows:
+start-mission-os.bat
+
+# Or run manually in separate terminals:
 # Terminal 1: Backend Express Server (Port 5000)
-npm run dev:server
+npm --prefix server run start
 
 # Terminal 2: Frontend Vite Client (Port 5173)
-npm run dev:client
+npm --prefix client run dev
 ```
 
 Open your browser to: **[http://localhost:5173](http://localhost:5173)**.
@@ -62,24 +68,9 @@ Open your browser to: **[http://localhost:5173](http://localhost:5173)**.
 
 ---
 
-## 🗄️ Supabase Cloud Configuration (Optional for Cloud Sync)
+## 🗄️ Supabase Cloud Configuration & Production Auth
 
-To connect your own live Supabase instance:
-1. Open your Supabase project dashboard.
-2. Go to the **SQL Editor** and paste the entire script from `supabase/schema.sql`.
-3. Create `server/.env`:
-   ```env
-   PORT=5000
-   CLIENT_ORIGIN=http://localhost:5173
-   SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-   GEMINI_API_KEY=your-gemini-api-key
-   ```
-4. Create `client/.env`:
-   ```env
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   ```
+For complete instructions on setting up Google OAuth, Twilio SMS Phone OTP, and applying the SQL database migration, see **[SETUP.md](SETUP.md)**.
 
 ---
 
@@ -89,11 +80,11 @@ To connect your own live Supabase instance:
 mission_tracker/
 ├── client/
 │   ├── src/
-│   │   ├── components/      # Reusable UI primitives, Modals, Nav, Badges
+│   │   ├── components/      # Reusable UI primitives, Modals, Nav, Badges, Auth
 │   │   ├── contexts/        # AuthContext, SoundContext
 │   │   ├── layouts/         # AppLayout with collapsible sidebar
 │   │   ├── lib/             # api.ts, supabase.ts
-│   │   ├── pages/           # Dashboard, Missions, Goals, Habits, Analytics...
+│   │   ├── pages/           # Dashboard, Missions, Goals, Habits, About, Auth...
 │   │   ├── types/           # TypeScript domain definitions
 │   │   ├── App.tsx
 │   │   └── main.tsx
@@ -111,7 +102,10 @@ mission_tracker/
 │   │   └── index.ts
 │   └── tsconfig.json
 ├── supabase/
+│   ├── migrations/          # Auth profiles, RLS, triggers migration
 │   └── schema.sql           # Complete 20-table DDL, Indexes, RLS Policies & Badges
+├── SETUP.md                 # Production authentication & setup guide
+├── start-mission-os.bat     # One-click startup script
 └── package.json
 ```
 
@@ -119,6 +113,6 @@ mission_tracker/
 
 ## 🛡️ Enterprise Security & Data Isolation
 - **Row Level Security**: Every table enforces multi-tenant row isolation via `auth.uid() = user_id`.
-- **Server-Side AI**: Zero client-side API keys. All Gemini prompts execute through backend services with strict validation.
+- **Zero Exposed Keys**: Never commit `.env` files. Service role keys and Gemini API keys are kept strictly on the backend.
+- **Server-Side AI**: All Gemini prompts execute through backend services with strict validation.
 - **Defensive Timezones**: Streak calculations adapt to midnight roll-overs without mutating historic records.
-
